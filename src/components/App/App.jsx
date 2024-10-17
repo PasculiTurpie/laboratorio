@@ -1,13 +1,14 @@
 
-import Header from '../Header/Header'
+import Header from '../Header/Header.jsx';
+import Login from '../Login/Login.jsx';
 import './App.css'
 
 function App() {
   
   return (
     <>
-      <h1>Hola</h1>
       <Header />
+      <Login />
        
     </>
   )
