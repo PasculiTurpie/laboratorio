@@ -8,8 +8,8 @@ const Login = () => {
   const nameLabel = useRef(null);
   const passInput = useRef(null);
   const passLabel = useRef(null);
-  const input = useRef('')
-
+/*   const input = useRef('')
+ */
 
 
   const listInputs = Array.from(document.querySelectorAll(".form-input"));
@@ -22,12 +22,19 @@ const Login = () => {
 
   const handleSubmit = (e) => {
    e.preventDefault()
+   alert("Datos enviados...")
  }
 
- /*  const handleOnChange = (e) => {
+  const handleOnChange = (e) => {
+    const id = e.target.id;
     console.log(e.target.validity.valid);
     console.log(`error-input-${id}`);
-  } */
+  }
+const handleClick = (e) => {
+    console.log(e.target)
+    console.log(e.target.parentElement.parentElement.id)
+}
+
 
   const handleInputNameFocus = () => {
     const nameInputRef = nameInput.current;
@@ -68,13 +75,17 @@ const Login = () => {
   };
 
   return (
+    <>
+
+
     <div className="login">
+   
       <img
         className="login-logo"
         src="http://principedeasturiasvaldivia.cl/Colegio/wp-content/uploads/2020/04/cropped-logo_colegio_completo-2.png"
         alt=""
       />
-      <form action="" className="form-login" onSubmit={handleSubmit}>
+      <form action="" className="form-login" id="form__login" onSubmit={handleSubmit}>
         <div className="form-group-input">
           <span className="form-label" ref={nameLabel}>
             Nombre
@@ -90,8 +101,8 @@ const Login = () => {
             required
             autoComplete="off"
             minLength={3}
-            maxLength={30}
-            /* onChange={handleOnChange} */
+            maxLength={30} 
+            onChange={handleOnChange} 
           />
           <span className="error-input error-input-name">Mensaje</span>
         </div>
@@ -109,16 +120,18 @@ const Login = () => {
             onBlur={handleInputPassBlur}
             required
             minLength={8}
+            onChange={handleOnChange} 
           />
           <span className="error-input error-input-password">Mensaje</span>
         </div>
         <div className="form-group-button">
-          <button className="form-button-enviar" type="submit">
+          <button className="form-button-enviar" type="submit" onClick={handleClick}>
             Iniciar sesión
           </button>
         </div>
       </form>
     </div>
+    </>
   );
 };
 
