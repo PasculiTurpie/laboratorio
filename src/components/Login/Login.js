@@ -11,8 +11,8 @@ const Login = () => {
   const nameLabel = useRef(null);
   const passInput = useRef(null);
   const passLabel = useRef(null);
-  const input = useRef('')
-
+/*   const input = useRef('')
+ */
 
 
   const listInputs = Array.from(document.querySelectorAll(".form-input"));
@@ -25,17 +25,15 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+   alert("Datos enviados...")
     navigate(`/asistencia`)
  }
 
- /*  const handleOnChange = (e) => {
+  const handleOnChange = (e) => {
+    const id = e.target.id;
     console.log(e.target.validity.valid);
     console.log(`error-input-${id}`);
-  } */
-
-
-  
-  
+  }
   const handleInputNameFocus = () => {
     const nameInputRef = nameInput.current;
     const nameLabelRef = nameLabel.current;
@@ -77,7 +75,11 @@ const Login = () => {
 
 
   return (
+    <>
+
+
     <div className="login">
+   
       <img
         className="login-logo"
         src="http://principedeasturiasvaldivia.cl/Colegio/wp-content/uploads/2020/04/cropped-logo_colegio_completo-2.png"
@@ -97,6 +99,7 @@ const Login = () => {
             onFocus={handleInputNameFocus}
             onBlur={handleInputNameBlur}
             required
+            
             autoComplete="off"
             minLength={3}
             maxLength={30}
@@ -118,16 +121,18 @@ const Login = () => {
             onBlur={handleInputPassBlur}
             required
             minLength={8}
+            onChange={handleOnChange} 
           />
           <span className="error-input error-input-password">Mensaje</span>
         </div>
         <div className="form-group-button">
-          <button className="form-button-enviar" type="submit">
+          <button className="form-button-enviar" type="submit" onClick={handleClick}>
             Iniciar sesión
           </button>
         </div>
       </form>
     </div>
+    </>
   );
 };
 
