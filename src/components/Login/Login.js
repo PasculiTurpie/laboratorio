@@ -1,8 +1,11 @@
 import React, { useRef, useState } from "react";
 import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import Layout from "../Layout/Layout";
 
 const Login = () => {
   const [inputFocus, setInputFocus] = useState("");
+  const navigate = useNavigate()
 
   const nameInput = useRef(null);
   const nameLabel = useRef(null);
@@ -21,7 +24,8 @@ const Login = () => {
   })
 
   const handleSubmit = (e) => {
-   e.preventDefault()
+    e.preventDefault()
+    navigate(`/asistencia`)
  }
 
  /*  const handleOnChange = (e) => {
@@ -29,6 +33,9 @@ const Login = () => {
     console.log(`error-input-${id}`);
   } */
 
+
+  
+  
   const handleInputNameFocus = () => {
     const nameInputRef = nameInput.current;
     const nameLabelRef = nameLabel.current;
@@ -67,6 +74,8 @@ const Login = () => {
     }
   };
 
+
+
   return (
     <div className="login">
       <img
@@ -74,7 +83,7 @@ const Login = () => {
         src="http://principedeasturiasvaldivia.cl/Colegio/wp-content/uploads/2020/04/cropped-logo_colegio_completo-2.png"
         alt=""
       />
-      <form action="" className="form-login" onSubmit={handleSubmit}>
+      <form action="" className="form-login" onSubmit={handleSubmit} >
         <div className="form-group-input">
           <span className="form-label" ref={nameLabel}>
             Nombre
@@ -91,7 +100,7 @@ const Login = () => {
             autoComplete="off"
             minLength={3}
             maxLength={30}
-            /* onChange={handleOnChange} */
+        
           />
           <span className="error-input error-input-name">Mensaje</span>
         </div>

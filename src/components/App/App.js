@@ -1,13 +1,22 @@
 
-import Header from '../Header/Header';
+import { Route, Routes } from 'react-router-dom';
 import Login from '../Login/Login';
 import './App.css';
+import Layout from '../Layout/Layout';
+import FormAsistencia from '../FormAsistencia/FormAsistencia';
 
 function App() {
   return (
     <div className="App">
-      <Header />
-      <Login />
+        
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/asistencia" element={<Layout />} >
+          <Route index element={<FormAsistencia />} />
+        </Route>
+
+      </Routes>
+ 
     </div>
   );
 }

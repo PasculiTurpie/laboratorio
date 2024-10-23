@@ -1,0 +1,8 @@
+.layout {
+  display           : grid;
+  min-height        : 100dvh;
+  justify-items     : center;
+  align-items       : center;
+  grid-template-rows: auto auto 1fr auto;
+  background        : #e7e5e5;
+}
