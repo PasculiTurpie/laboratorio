@@ -126,7 +126,7 @@ const Login = () => {
           <span className="error-input error-input-password">Mensaje</span>
         </div>
         <div className="form-group-button">
-          <button className="form-button-enviar" type="submit" onClick={handleClick}>
+          <button className="form-button-enviar" type="submit">
             Iniciar sesión
           </button>
         </div>
