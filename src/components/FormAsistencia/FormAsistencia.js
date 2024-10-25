@@ -3,6 +3,16 @@ import "./FormAsistencia.css";
 
 const FormAsistencia = () => {
   const [cursos, setCursos] = useState([]);
+  const [docente, setDocente] = useState([])
+
+const obtenerDocente = () => {
+  fetch("http://localhost:5000/api/v1/docente")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      setDocente(data.allDocente);
+    });
+};
 
   const obtenerCurso = () => {
     fetch("http://localhost:5000/api/v1/curso")
@@ -15,6 +25,7 @@ const FormAsistencia = () => {
 
   useEffect(() => {
     obtenerCurso();
+    obtenerDocente();
   }, []);
 
   return (
@@ -25,19 +36,14 @@ const FormAsistencia = () => {
           <label htmlFor="docente">Docente</label>
           <select className="selected-item" name="" id="docente">
             <option value="">Docente</option>
-            <option value="">LESLIE SILVANA MARTINEZ PINO</option>
-            <option value="">CAROLINA ANDREA ELLWANGER VELIZ</option>
-            <option value="">ALEJANDRA BEATRIZ GONZÁLEZ GALLARDO</option>
-            <option value="">PATRICIA EUGENIA ESCAREZ PAZ</option>
-            <option value="">RENATA VALENTINA MONSERRAT JARAMILLO MUÑOZ</option>
-            <option value="">VICTORIA FRANCISCA MENA VERA</option>
-            <option value="">JAVIERA FERNANDA KOPP ZÀRATE</option>
-            <option value="">ROXANA ANDREA OPORTO AICHELE</option>
-            <option value="">LILIAN DEL CARMEN MARTINEZ MORALES</option>
-            <option value="">CRISTOBAL FRANCISCO SANTIBAÑEZ LEHNEBACH</option>
-            <option value="">JUANA RETAMAL JIMENEZ</option>
-            <option value="">CHRISTOPHER MAURICIO WISTUBA GALAZ</option>
-            <option value="">CAROLA HERNA PERALTA MUÑOZ</option>
+            {docente.length > 0 &&
+              docente?.map((item) => {
+                return (
+                  <option key={item._id} value={item.nombreDocente}>
+                    {item.nombreDocente}
+                  </option>
+                );
+              })}
           </select>
         </div>
 
