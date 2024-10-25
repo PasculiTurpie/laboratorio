@@ -25,7 +25,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-   alert("Datos enviados...")
     navigate(`/asistencia`)
  }
 
@@ -76,62 +75,58 @@ const Login = () => {
 
   return (
     <>
-
-
-    <div className="login">
-   
-      <img
-        className="login-logo"
-        src="http://principedeasturiasvaldivia.cl/Colegio/wp-content/uploads/2020/04/cropped-logo_colegio_completo-2.png"
-        alt=""
-      />
-      <form action="" className="form-login" onSubmit={handleSubmit} >
-        <div className="form-group-input">
-          <span className="form-label" ref={nameLabel}>
-            Nombre
-          </span>
-          <input
-            className="form-input"
-            type="text"
-            name="input-name"
-            id="name"
-            ref={nameInput}
-            onFocus={handleInputNameFocus}
-            onBlur={handleInputNameBlur}
-            required
-            
-            autoComplete="off"
-            minLength={3}
-            maxLength={30}
-        
-          />
-          <span className="error-input error-input-name">Mensaje</span>
-        </div>
-        <div className="form-group-input">
-          <span className="form-label" ref={passLabel}>
-            Password
-          </span>
-          <input
-            className="form-input"
-            type="password"
-            name="input-password"
-            id="password"
-            ref={passInput}
-            onFocus={handleInputPassFocus}
-            onBlur={handleInputPassBlur}
-            required
-            minLength={8}
-            onChange={handleOnChange} 
-          />
-          <span className="error-input error-input-password">Mensaje</span>
-        </div>
-        <div className="form-group-button">
-          <button className="form-button-enviar" type="submit">
-            Iniciar sesión
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="login">
+        <img
+          className="login-logo"
+          src="http://principedeasturiasvaldivia.cl/Colegio/wp-content/uploads/2020/04/cropped-logo_colegio_completo-2.png"
+          alt=""
+        />
+        <form action="" className="form-login" onSubmit={handleSubmit}>
+          <div className="form-group-input">
+            <span className="form-label" ref={nameLabel}>
+              Nombre
+            </span>
+            <input
+              className="form-input"
+              type="text"
+              name="input-name"
+              id="name"
+              ref={nameInput}
+              onFocus={handleInputNameFocus}
+              onBlur={handleInputNameBlur}
+              required
+              autoComplete="off"
+              minLength={3}
+              maxLength={30}
+            />
+            <span className="error-input error-input-name">Mensaje</span>
+          </div>
+          <div className="form-group-input">
+            <span className="form-label" ref={passLabel}>
+              Password
+            </span>
+            <input
+              className="form-input"
+              type="password"
+              name="input-password"
+              id="password"
+              ref={passInput}
+              onFocus={handleInputPassFocus}
+              onBlur={handleInputPassBlur}
+              required
+              autoComplete="off"
+              minLength={8}
+              onChange={handleOnChange}
+            />
+            <span className="error-input error-input-password">Mensaje</span>
+          </div>
+          <div className="form-group-button">
+            <button className="form-button-enviar" type="submit">
+              Iniciar sesión
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
 };

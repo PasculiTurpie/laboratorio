@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./FormAsistencia.css";
 
 const FormAsistencia = () => {
+  const [cursos, setCursos] = useState([]);
+
+  const obtenerCurso = () => {
+    fetch("http://localhost:5000/api/v1/curso")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        setCursos(data.curso);
+      });
+  };
+
+  useEffect(() => {
+    obtenerCurso();
+  }, []);
+
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -35,18 +50,14 @@ const FormAsistencia = () => {
               id="curso"
             >
               <option value="">Curso</option>
-              <option value="">NT1-A</option>
-              <option value="">NT1-B</option>
-              <option value="">NT2-A</option>
-              <option value="">NT2-B</option>
-              <option value="">Primero-A</option>
-              <option value="">Primero-B</option>
-              <option value="">Segundo-A</option>
-              <option value="">Segundo-B</option>
-              <option value="">Tercero-A</option>
-              <option value="">Tercero-B</option>
-              <option value="">Cuarto-A</option>
-              <option value="">Cuarto-B</option>
+              {cursos.length > 0 &&
+                cursos?.map((item, index) => {
+                  return (
+                    <option key={index} value={item.nombreCurso}>
+                      {item.nombreCurso}
+                    </option>
+                  );
+                })}
             </select>
           </div>
 
