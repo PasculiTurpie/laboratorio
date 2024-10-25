@@ -40,7 +40,7 @@ const obtenerDocente = () => {
               docente?.map((item) => {
                 return (
                   <option key={item._id} value={item.nombreDocente}>
-                    {item.nombreDocente}
+                    {`${item.nombreDocente} ${item.apellidoDocente}`}
                   </option>
                 );
               })}
