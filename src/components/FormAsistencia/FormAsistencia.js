@@ -3,7 +3,8 @@ import "./FormAsistencia.css";
 
 const FormAsistencia = () => {
   const [cursos, setCursos] = useState([]);
-  const [docente, setDocente] = useState([])
+  const [docente, setDocente] = useState([]);
+  const [idDocente, setIdDocente] = useState('');
 
 const obtenerDocente = () => {
   fetch("http://localhost:5000/api/v1/docente")
@@ -11,22 +12,26 @@ const obtenerDocente = () => {
     .then((data) => {
       console.log(data);
       setDocente(data.allDocente);
+      setCursos(data.allDocente.curso);
     });
-};
-
-  const obtenerCurso = () => {
-    fetch("http://localhost:5000/api/v1/curso")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        setCursos(data.curso);
-      });
   };
+  
+  const filterDocente = docente.filter(
+    (itemDocente) => itemDocente._id === idDocente
+  );
+
+  console.log(filterDocente)
+
+
 
   useEffect(() => {
-    obtenerCurso();
     obtenerDocente();
   }, []);
+
+  const handletarget = (e) => {
+    setIdDocente(e.target.value);
+    console.log(idDocente)
+  }
 
   return (
     <div className="container-form">
@@ -34,17 +39,23 @@ const obtenerDocente = () => {
       <form className="form-asistencia">
         <div className="select-group">
           <label htmlFor="docente">Docente</label>
-          <select className="selected-item" name="" id="docente">
-            <option value="">Docente</option>
+          <select
+            className="selected-item"
+            name=""
+            id="docente"
+            onChange={handletarget}
+          >
+            <option value="-1">Docente</option>
             {docente.length > 0 &&
               docente?.map((item) => {
                 return (
-                  <option key={item._id} value={item.nombreDocente}>
+                  <option key={item._id} value={item._id}>
                     {`${item.nombreDocente} ${item.apellidoDocente}`}
                   </option>
                 );
               })}
           </select>
+          {idDocente && <p>ID seleccionado: {idDocente}</p>}
         </div>
 
         <div className="group-selected">
@@ -56,14 +67,14 @@ const obtenerDocente = () => {
               id="curso"
             >
               <option value="">Curso</option>
-              {cursos.length > 0 &&
-                cursos?.map((item, index) => {
-                  return (
-                    <option key={index} value={item.nombreCurso}>
-                      {item.nombreCurso}
-                    </option>
-                  );
-                })}
+              {filterDocente?.map((item, index) => {
+                console.log(item)
+                return (
+                  <option key={index} value={item.curso._id}>
+                    {item.curso.nombreCurso}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
