@@ -4,34 +4,77 @@ import "./FormAsistencia.css";
 const FormAsistencia = () => {
   const [cursos, setCursos] = useState([]);
   const [docente, setDocente] = useState([]);
-  const [idDocente, setIdDocente] = useState('');
+  const [idDocente, setIdDocente] = useState("");
+  const [matricula, setMatricula] = useState("");
+  const [herramienta, setHerramienta] = useState([]);
+  const [herramientaId, setHerramientaId] = useState("");
+  const [objetivo, setObjetivo] = useState([]);
 
-const obtenerDocente = () => {
-  fetch("http://localhost:5000/api/v1/docente")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      setDocente(data.allDocente);
-      setCursos(data.allDocente.curso);
-    });
+  const obtenerDocente = () => {
+    fetch("http://localhost:5000/api/v1/docente")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setDocente(data.allDocente);
+      });
   };
-  
-  const filterDocente = docente.filter(
-    (itemDocente) => itemDocente._id === idDocente
-  );
-
-  console.log(filterDocente)
-
-
 
   useEffect(() => {
     obtenerDocente();
   }, []);
 
-  const handletarget = (e) => {
-    setIdDocente(e.target.value);
-    console.log(idDocente)
-  }
+  const handleDocenteChange = (e) => {
+    const selectedDocenteId = e.target.value;
+    setIdDocente(selectedDocenteId);
+
+    // Filtrar los cursos según el docente seleccionado
+    const selectedDocente = docente.find(
+      (itemDocente) => itemDocente._id === selectedDocenteId
+    );
+
+    // Si se encuentra el docente seleccionado, actualizar los cursos
+    if (selectedDocente) {
+      setCursos(selectedDocente.curso);
+    } else {
+      setCursos([]);
+    }
+  };
+
+  const handleCursoChange = (e) => {
+    const selectCursoId = e.target.value;
+    const selectedMaricula = cursos.find(
+      (itemDocente) => itemDocente._id === selectCursoId
+    );
+    setMatricula(selectedMaricula.matricula);
+  };
+
+  const obtenerHerramienta = () => {
+    fetch("http://localhost:5000/api/v1/herramienta")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.tools);
+        setHerramienta(data.tools);
+      });
+  };
+  useEffect(() => {
+    obtenerHerramienta();
+  }, []);
+
+  const handleHerramientaChange = (e) => {
+    const selectHerramientaId = e.target.value;
+    setHerramientaId(selectHerramientaId);
+    const selectedHerramienta = herramienta.find(
+      (itemHerramienta) => itemHerramienta._id === selectHerramientaId
+    );
+    setObjetivo(selectedHerramienta.objetivo); // Obtener el objetivo de la herramienta seleccionada
+    if (selectedHerramienta) {
+      console.log(selectedHerramienta.objetivo);
+    } else {
+      setObjetivo("");
+    } // Obtener el objetivo de la herramienta seleccionada
+
+   
+  };
 
   return (
     <div className="container-form">
@@ -43,7 +86,7 @@ const obtenerDocente = () => {
             className="selected-item"
             name=""
             id="docente"
-            onChange={handletarget}
+            onChange={handleDocenteChange}
           >
             <option value="-1">Docente</option>
             {docente.length > 0 &&
@@ -55,7 +98,6 @@ const obtenerDocente = () => {
                 );
               })}
           </select>
-          {idDocente && <p>ID seleccionado: {idDocente}</p>}
         </div>
 
         <div className="group-selected">
@@ -65,13 +107,13 @@ const obtenerDocente = () => {
               className="group-selected-item selected-item"
               name=""
               id="curso"
+              onChange={handleCursoChange}
             >
               <option value="">Curso</option>
-              {filterDocente?.map((item, index) => {
-                console.log(item)
+              {cursos?.map((curso, index) => {
                 return (
-                  <option key={index} value={item.curso._id}>
-                    {item.curso.nombreCurso}
+                  <option key={index} value={curso._id}>
+                    {curso.nombreCurso}
                   </option>
                 );
               })}
@@ -85,6 +127,7 @@ const obtenerDocente = () => {
               type="number"
               name=""
               id="matricula"
+              value={matricula}
             />
           </div>
           <div className="select-item-self">
@@ -94,6 +137,7 @@ const obtenerDocente = () => {
               type="number"
               name=""
               id="asistencia"
+              required
             />
           </div>
         </div>
@@ -101,14 +145,18 @@ const obtenerDocente = () => {
           <label htmlFor="herramineta">Herramienta a utilizar</label>
           <select
             className="selected-item"
-            type="text"
             name=""
-            id="herramineta"
+            id="tool"
+            onChange={handleHerramientaChange}
           >
-            <option value="">Mi Primer Bartolo</option>
-            <option value="">Aprendiendo a leer con Bartolo</option>
-            <option value="">Mi primer Bartolo matemáticas</option>
-            <option value="">E-MAT (Compumat)</option>
+            <option value="">Seleccionar Herramienta</option>
+            {herramienta?.map((tool) => {
+              return (
+                <option key={tool._id} value={tool._id}>
+                  {tool.nombreTool}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="select-group">
@@ -119,10 +167,16 @@ const obtenerDocente = () => {
             name=""
             id="herramineta"
           >
-            <option value="">Mi Primer Bartolo</option>
-            <option value="">Aprendiendo a leer con Bartolo</option>
-            <option value="">Mi primer Bartolo matemáticas</option>
-            <option value="">E-MAT (Compumat)</option>
+            <option value="">Seleccionar Objetivo</option>
+            {
+              objetivo?.map(obj => {
+                return (
+                  <option key={obj._id} value={obj._id}>
+                    {obj.nombreObjetivo}
+                  </option>
+                );
+              })
+            }
           </select>
         </div>
         <div className="button-group">
