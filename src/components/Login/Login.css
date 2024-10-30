@@ -106,7 +106,7 @@ color:#013fc59d;
   color: red;
   font-size: 12px;
   margin: 5px 10px;
-  visibility: hidden;
+  display:block;
 }
 
 .error-input-visible{
