@@ -1,53 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import "./FormAttendance.css";
-import { Form, useFormik } from 'formik';
-import * as Yup from 'yup';
-import TextField from "@mui/material/TextField";
-
+import * as Yup from "yup";
+import axios from "axios";
 
 const FormAttendance = () => {
+  const [curso, setCurso] = useState([]);
 
-  const validationSchema = Yup.object().shape(
-    Yup.object().shape({
-      docente: Yup.string().required("Debe seleccionar un docente"),
-      curso: Yup.string().required("Debe seleccionar un curso"),
-      matricula: Yup.string().required("Debe ingresar una matricula"),
-      asistencia: Yup.string().required("Debe Ingresar la asistencia"),
-      herramienta: Yup.string().required("Debe seleccionar una herramienta"),
-      objetivo: Yup.string().required("Debe seleccionar un objetivo"),
-    })
-  );
+  const getCurso = () => {
+    // Fetch API to get the list of curso
+    axios
+      .get("http://localhost:5000/api/v1/curso")
+      .then((response) => {
+        setCurso(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  const formik = useFormik({
-    initialValues: {
-      docente: '',
-      curso: '',
-      matricula: '',
-      asistencia: '',
-      herramienta: '',
-      objetivo: '',
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-    },
+  useEffect(() => {
+    getCurso();
+  }, []);
 
-  });
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
 
-      <form className="form-asistencia" onSubmit={formik.handleSubmit}>
+      <form className="form-asistencia">
         <div className="select-group">
           <label htmlFor="docente">Docente</label>
-          <select
-            className="selected-item"
-            id="docente"
-            onChange={formik.handleChange}
-            value={formik.values.docente}
-            name="docente"
-          >
-            <option value="">Seleccionar Docente</option>
+          <select className="selected-item" name="docente">
+            <option value="">Docente</option>
             <option value="Jorge">Jorge</option>
           </select>
         </div>
@@ -55,26 +39,19 @@ const FormAttendance = () => {
         <div className="group-selected">
           <div className="select-item-self">
             <label htmlFor="curso">Curso</label>
-            <select
-              className="group-selected-item selected-item"
-              id="curso"
-              onChange={formik.handleChange}
-              value={formik.values.curso}
-            >
-              <option value="">Seleccionar Curso</option>
-              <option value="primero-A">Primero-A</option>
+            <select className="group-selected-item selected-item" name="curso">
+              <option value=""> Curso</option>
+              {curso?.map((item) => (
+                <option key={item._id} value={item._id}>
+                  {item.nombreCurso}
+                </option>
+              ))}
             </select>
           </div>
 
           <div className="select-item-self">
             <label htmlFor="matricula">Matricula</label>
-            <TextField
-              id="outlined-basic"
-              className="group-selected-item selected-item"
-              variant="outlined"
-              type="number"
-            />
-            
+            <input name="matricula" className="selected-item" type="number" />
           </div>
 
           <div className="select-item-self">
@@ -82,9 +59,7 @@ const FormAttendance = () => {
             <input
               className="group-selected-item selected-item"
               type="number"
-              id="asistencia"
-              onChange={formik.handleChange}
-              value={formik.values.asistencia}
+              name="asistencia"
               min="1"
             />
           </div>
@@ -92,12 +67,7 @@ const FormAttendance = () => {
 
         <div className="select-group">
           <label htmlFor="herramienta">Herramienta a utilizar</label>
-          <select
-            className="selected-item"
-            id="herramienta"
-            onChange={formik.handleChange}
-            value={formik.values.herramienta}
-          >
+          <select className="selected-item" name="herramienta">
             <option value="">Seleccionar Herramienta</option>
             <option value="mi ptimer bartolo">Mi primer bartolo</option>
           </select>
@@ -105,12 +75,7 @@ const FormAttendance = () => {
 
         <div className="select-group">
           <label htmlFor="objetivo">Objetivos a cumplir</label>
-          <select
-            className="selected-item"
-            id="objetivo"
-            onChange={formik.handleChange}
-            value={formik.values.objetivo}
-          >
+          <select className="selected-item" name="objetivo">
             <option value="">Seleccionar Objetivo</option>
             <option value="Apresto a la lectoescritura">
               Apresto a la lectoescritura
@@ -126,6 +91,6 @@ const FormAttendance = () => {
       </form>
     </div>
   );
-}
+};
 
-export default FormAttendance
+export default FormAttendance;
