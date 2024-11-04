@@ -4,19 +4,24 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-
 const Manager = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, formState:{errors}, handleSubmit } = useForm({
+    defaultValues: {
+      nombreCurso: "",
+      matricula: "",
+    },
+  });
 
   const onSubmit = (data) => {
-    console.log(data)
-    axios.post('http://localhost:5000/api/v1/curso', data    )
-      .then((response) => {       
+    console.log(data);
+    axios
+      .post("http://localhost:5000/api/v1/curso", data)
+      .then((response) => {
         Swal.fire(
-          'Curso creado correctamente!',
-          'El curso ha sido creado exitosamente.',
-          'success'
-        )
+          "Curso creado correctamente!",
+          "El curso ha sido creado exitosamente.",
+          "success"
+        );
       })
       .catch((error) => {
         Swal.fire({
@@ -25,9 +30,8 @@ const Manager = () => {
           text: "Error al crear el curso, intente nuevamente",
         });
         console.error(error, {
-          message: 'Error al crear el curso',
+          message: "Error al crear el curso",
         });
-       
       });
   };
 
@@ -44,18 +48,44 @@ const Manager = () => {
                 className="group-selected-item selected-item"
                 type="text"
                 name="nombreCurso"
-                {...register("nombreCurso")}
+                {...register("nombreCurso", {
+                  required: true,
+                  maxLength: 50,
+                  minLength: 10,
+                })}
               />
+              {errors?.nombreCurso?.type === "required" && (
+                <span className="error">El campo es obligatorio</span>
+              )}
+              {errors?.nombreCurso?.type === "maxLength" && (
+                <span className="error">El campo solo puede tener maximo 50 caracteres</span>
+              )}
+              {errors?.nombreCurso?.type === "minLength" && (
+                <span className="error">El campo debe tener mínimo 10 caractres</span>
+              )}
             </div>
             <div className="select-item-self">
               <label htmlFor="curso">N° Matricula</label>
               <input
-                className="group-selected-item selected-item"
+                className="group-selected-item selected-item select-item-number"
                 type="number"
                 name="matricula"
                 min="1"
-                {...register("matricula")}
+                {...register("matricula", {
+                  required: true,
+                  min: 1,
+                  max: 50,
+                })}
               />
+              {errors?.matricula?.type === "required" && (
+                <span className="error">El campo es obligatorio</span>
+              )}
+              {errors?.matricula?.type === "max" && (
+                <span className="error">El campo solo puede tener maximo 40 matriculados</span>
+              )}
+              {errors?.matricula?.type === "min" && (
+                <span className="error" >El campo debe tener mínimo 1 matriculado</span>
+              )}
             </div>
             <br />
             <div className="button-group">
