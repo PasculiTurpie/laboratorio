@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import Login from '../Login/Login';
 import './App.css';
 import Layout from '../Layout/Layout';
-import FormAsistencia from '../FormAsistencia/FormAsistencia';
 import FormAttendance from '../FormAsistencia/FormAttendance';
 import Manager from '../Manager/Manager';
 
