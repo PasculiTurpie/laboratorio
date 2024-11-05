@@ -1,9 +1,16 @@
-.container-form{
-
-  border:2px solid green;
+.form-container{
+  /* border:2px solid green; */
+  display:flex;
+  height: fit-content;
+  flex-direction: row;
+  column-gap: 50px;
 }
 .form-curso{
-  border:2px solid green;
+  /* border:2px solid green; */
+  background: #fff;
+  padding:50px;
+   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+ 0 6px 6px rgba(0, 0, 0, 0.23)
 }
 .btn-curso {
 
@@ -17,7 +24,6 @@
 }
 .select-item-self{
   width: 100%;
-  border:2px solid green;
 }
 .select-item-number{
   margin: auto;

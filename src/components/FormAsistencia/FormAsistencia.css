@@ -74,13 +74,6 @@ transition: all 0.3s ease;
   margin: 10px 0;
 }
 
-/* .group-selected-item{
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  width: 50px;
-  border:1px solid orange;
-} */
-
 .item-self{
   background-color: yellow;
   width: 100px;

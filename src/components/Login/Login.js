@@ -20,20 +20,28 @@ const { register, formState:{errors}, handleSubmit} = useForm();
           src="http://principedeasturiasvaldivia.cl/Colegio/wp-content/uploads/2020/04/cropped-logo_colegio_completo-2.png"
           alt=""
         />
-        <form action="" className="form-login" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          action=""
+          className="form-login"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="form-group-input">
             <input
               className="form-input"
               type="text"
               name="name"
-              {...register('name', {required: true,
-              minLength: {
-                value: 3,
-                message: "Debe tener al menos 3 caracteres"
-              }})}
+              {...register("name", {
+                required: "El campo es obligatorio",
+                minLength: {
+                  value: 3,
+                  message: "Debe tener al menos 3 caracteres",
+                },
+              })}
             />
             <span>
-              {errors.name && <span className="error-input">{errors.name.message}</span>}
+              {errors.name && (
+                <span className="error">{errors.name.message}</span>
+              )}
             </span>
           </div>
           <div className="form-group-input">
@@ -41,17 +49,19 @@ const { register, formState:{errors}, handleSubmit} = useForm();
               className="form-input"
               type="password"
               name="password"
-              {...register('password', {
-                required:true,
+              {...register("password", {
+                required: "El campo es obligatorio",
                 minLength: {
                   value: 8,
-                  message: "Debe tener al menos 8 caracteres"
-                }})}
+                  message: "Debe tener al menos 8 caracteres",
+                },
+              })}
             />
             <span>
-              {errors.password && <span className="error-input">{errors.password.message}</span>}
+              {errors.password && (
+                <span className="error">{errors.password.message}</span>
+              )}
             </span>
-
           </div>
           <div className="form-group-button">
             <button className="form-button-enviar" type="submit">
