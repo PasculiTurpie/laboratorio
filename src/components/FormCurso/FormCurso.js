@@ -18,13 +18,15 @@ const FormCurso = () => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
+
+    const curso = (data.nombreCurso)
     axios
       .post("http://localhost:5000/api/v1/curso", data)
+
       .then((response) => {
         Swal.fire(
-          "Curso creado correctamente!",
-          "El curso ha sido creado exitosamente.",
+          `${curso} creado correctamente!`,
+          "",
           "success"
         );
       })
@@ -32,10 +34,7 @@ const FormCurso = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Error al crear el curso, intente nuevamente",
-        });
-        console.error(error, {
-          message: "Error al crear el curso",
+          text: `${error.response.data.error.errors.nombreCurso.message}`,
         });
       });
   };
@@ -54,23 +53,19 @@ const FormCurso = () => {
                 type="text"
                 name="nombreCurso"
                 {...register("nombreCurso", {
-                  required: true,
-                  maxLength: 30,
-                  minLength: 3,
+                  required: 'El curso es requerido',
+                  maxLength: {
+                    value: 50,
+                    message: "El nombre del curso solo puede tener máximo 50 caracteres",
+                  },
+                  minLength: {
+                    value: 3,
+                    message: "El nombre del curso debe tener mínimo 3 caracteres",
+                  },
                 })}
               />
-              {errors?.nombreCurso?.type === "required" && (
-                <span className="error">El campo es obligatorio</span>
-              )}
-              {errors?.nombreCurso?.type === "maxLength" && (
-                <span className="error">
-                  El campo solo puede tener maximo 50 caracteres
-                </span>
-              )}
-              {errors?.nombreCurso?.type === "minLength" && (
-                <span className="error">
-                  El campo debe tener mínimo 10 caractres
-                </span>
+              {errors?.nombreCurso && (
+                <span className="error">{errors.nombreCurso.message}</span>
               )}
             </div>
 
@@ -82,24 +77,21 @@ const FormCurso = () => {
                 name="matricula"
                 min="1"
                 {...register("matricula", {
-                  required: true,
-                  min: 1,
-                  max: 40,
+                  required: "La matricula es un parámetro requerido",
+                  min: {
+                    value: 1,
+                    message: "El campo debe tener mínimo 1 matriculado",
+                  },
+                  max: {
+                    value: 40,
+                    message: "El campo solo puede tener maximo 40 matriculados",
+                  },
                 })}
               />
-              {errors?.matricula?.type === "required" && (
-                <span className="error">Requerido</span>
+              {errors?.matricula && (
+                <span className="error">{ errors.matricula.message }</span>
               )}
-              {errors?.matricula?.type === "max" && (
-                <span className="error">
-                  El campo solo puede tener maximo 40 matriculados
-                </span>
-              )}
-              {errors?.matricula?.type === "min" && (
-                <span className="error">
-                  El campo debe tener mínimo 1 matriculado
-                </span>
-              )}
+              
             </div>
 
            

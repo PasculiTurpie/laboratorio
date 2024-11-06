@@ -22,13 +22,6 @@
   font-size    : 16px;
   cursor       : pointer;
 }
-.select-item-self{
-  width: 100%;
-}
-.select-item-number{
-  margin: auto;
-  width: 80px;
-}
 
 .btn-curso:hover {
   background: #ff9500;

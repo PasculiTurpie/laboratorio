@@ -43,7 +43,10 @@ transition: all 0.3s ease;
 }
 .group-selected{
   display: flex;
+  column-gap: 5px;
 }
+
+
 .select-item-self{
   display: flex;
   margin: auto;
