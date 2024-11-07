@@ -18,7 +18,6 @@ const FormDocente = () => {
   });
 
   const onSubmit = (dataDocente) => {
-    console.log(dataDocente);
     axios
       .post("http://localhost:5000/api/v1/docente", dataDocente)
       .then((response) => {

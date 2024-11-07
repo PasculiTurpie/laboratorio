@@ -7,6 +7,9 @@ const FormAttendance = () => {
   const [curso, setCurso] = useState([]);
   const [docente, setDocente] = useState([]);
   const [matriculaCurso, setMatriculaCurso] = useState("");
+  const [herramientas, setHerramientas] = useState([]);
+  const [targetTools, setTargetTools] = useState();
+  const [objetivos, setObjetivos] = useState([]);
 
   const {
     register,
@@ -16,7 +19,7 @@ const FormAttendance = () => {
     defaultValues: {
       docenteAula: "",
       cursoNivel: "",
-      matriculaCurso: "",
+      matricula: "",
       asistencia: "",
       herramienta: "",
       objetivo: "",
@@ -33,7 +36,6 @@ const FormAttendance = () => {
       .get("http://localhost:5000/api/v1/curso")
       .then((response) => {
         setCurso(response.data);
-        console.log(curso);
       })
       .catch((error) => {
         console.log(error);
@@ -52,10 +54,38 @@ const FormAttendance = () => {
       });
   };
 
+  const getHerramientas = () => {
+    axios
+      .get("http://localhost:5000/api/v1/herramienta")
+      .then((response) => {
+        setHerramientas(response.data.tools);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getObjetivos = () => {
+    axios
+      .get(`http://localhost:5000/api/v1/herramienta/${targetTools}`)
+      .then((response) => {
+        console.log(response.data.objetivo);
+        setObjetivos(response.data.objetivo);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+
+
+  
   useEffect(() => {
     getDocente();
     getCurso();
-  }, []);
+    getHerramientas();
+    getObjetivos();
+  }, [targetTools]);
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -92,10 +122,13 @@ const FormAttendance = () => {
             <label htmlFor="cursoNivel">Curso</label>
             <select
               className="group-selected-item selected-item"
-              name="cursoNivel"
               onClick={(e) => {
-                setMatriculaCurso(e.target.value);
+                console.log(e.target.selectedOptions[0].dataset.matricula);
+                setMatriculaCurso(
+                  e.target.selectedOptions[0].dataset.matricula
+                );
               }}
+              name="cursoNivel"
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
               })}
@@ -103,7 +136,11 @@ const FormAttendance = () => {
               <option value="">Curso</option>
               {curso?.map((item) => {
                 return (
-                  <option key={item._id} value={item.matricula}>
+                  <option
+                    key={item._id}
+                    value={item.nombreCurso}
+                    data-matricula={item.matricula}
+                  >
                     {item.nombreCurso.toUpperCase()}
                   </option>
                 );
@@ -119,6 +156,9 @@ const FormAttendance = () => {
               type="number"
               readOnly="true"
               value={matriculaCurso}
+              {...register("matricula", {
+                required: "La matricula es requerida",
+              })}
             />
           </div>
 
@@ -134,12 +174,11 @@ const FormAttendance = () => {
                 required: "Ingrese la asistencia",
                 min: {
                   value: 1,
-                  message:
-                    "La asistencia debe ser un número entero mayor o igual a 1",
+                  message: "La asistencia debe ser un número mayor o igual a 1",
                 },
                 max: {
-                  value: `${ matriculaCurso }`,
-                  message: `La asistencia debe ser un número entero menor o igual a ${matriculaCurso}`,
+                  value: `${matriculaCurso}`,
+                  message: `La asistencia ser un número menor o igual a ${matriculaCurso}`,
                 },
               })}
             />
@@ -157,20 +196,50 @@ const FormAttendance = () => {
 
         <div className="select-group">
           <label htmlFor="herramienta">Herramienta a utilizar</label>
-          <select className="selected-item" name="herramienta">
+          <select
+            className="selected-item"
+            name="herramientas"
+            onClick={(e) => {
+              console.log(e.target.selectedOptions[0].dataset.category);
+              setTargetTools(e.target.selectedOptions[0].dataset.category);
+            }}
+            {...register("herramienta", {
+              required: `Debe seleccionar una opción`,
+            })}
+          >
             <option value="">Seleccionar Herramienta</option>
-            <option value="mi ptimer bartolo">Mi primer bartolo</option>
+            {herramientas?.map((herramienta) => (
+              <option
+                key={herramienta._id}
+                value={herramienta.nombreTool}
+                data-category={`${herramienta._id}`}
+              >
+                {herramienta.nombreTool.toUpperCase()}
+              </option>
+            ))}
           </select>
+          {errors?.herramienta && (
+            <span className="error">{errors.herramienta.message}</span>
+          )}
         </div>
 
         <div className="select-group">
           <label htmlFor="objetivo">Objetivos a cumplir</label>
-          <select className="selected-item" name="objetivo">
+          <select className="selected-item" name="objetivo"
+            {
+          ...register('objetivo', {
+              required: 'Debe seleccionar un objetivo',
+            })
+            }>
             <option value="">Seleccionar Objetivo</option>
-            <option value="Apresto a la lectoescritura">
-              Apresto a la lectoescritura
-            </option>
+            {
+              objetivos?.map((obj) => (
+                <option key={obj._id} value={obj.nombreObjetivo}>
+                  {obj.nombreObjetivo.toUpperCase()}
+                </option>
+            ))}
           </select>
+          {errors?.objetivo && <span className="error">{ errors.objetivo.message}</span>}
         </div>
 
         <div className="button-group">
