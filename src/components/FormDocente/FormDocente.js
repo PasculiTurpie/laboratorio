@@ -18,6 +18,7 @@ const FormDocente = () => {
   });
 
   const onSubmit = (dataDocente) => {
+    console.log({dataDocente});
     axios
       .post("http://localhost:5000/api/v1/docente", dataDocente)
       .then((response) => {
@@ -31,10 +32,11 @@ const FormDocente = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Error al crear el Docente, intente nuevamente",
+          /* text: `${error.response.data.error.errors.nombreCurso.message}` */
+          text: `${error.response.data.error.errors.emailDocente.message}`
         });
         console.error(error, {
-          message: "Error al crear el Docente",
+          error
         });
       });
   };

@@ -2,7 +2,7 @@
   /* border:2px solid green; */
   display:flex;
   height: fit-content;
-  flex-direction: row;
+  flex-direction: column;
   column-gap: 50px;
 }
 .form-curso{
@@ -27,4 +27,10 @@
   background: #ff9500;
   outline   : 2px solid #f3f1ef;
   cursor    : pointer;
+}
+.div-container{
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  margin:20px
 }

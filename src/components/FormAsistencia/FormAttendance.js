@@ -146,6 +146,7 @@ const FormAttendance = () => {
                 );
               })}
             </select>
+         
           </div>
 
           <div className="select-item-self select-item-number">
