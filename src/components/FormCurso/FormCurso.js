@@ -9,7 +9,7 @@ const FormCurso = () => {
   const {
     register,
     formState: { errors },
-    handleSubmit,
+    handleSubmit, reset
   } = useForm({
     defaultValues: {
       nombreCurso: "",
@@ -37,6 +37,11 @@ const FormCurso = () => {
           text: `${error.response.data.error.errors.nombreCurso.message}`,
         });
       });
+    reset({
+        nombreCurso: "",
+        matricula: "",
+ 
+     });
   };
 
   return (

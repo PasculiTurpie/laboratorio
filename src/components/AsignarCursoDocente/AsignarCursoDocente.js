@@ -1,41 +1,52 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 const AsignarCursoDocente = () => {
-
   const [curso, setCurso] = useState([]);
   const [docente, setDocente] = useState([]);
 
-  const {register, formState: { errors },
-    handleSubmit } = useForm();
-  
- const onSubmit = (dataAsign) => {
-   const payload = { curso: dataAsign.cursoNivel };
+  const {
+    register,
+    formState: { errors },
+    handleSubmit, reset
+  } = useForm({
+    defaultValues: {
+      cursoNivel: "",
+      docenteAula: "",
+    },
+  });
 
-   axios
-     .patch(
-       `http://localhost:5000/api/v1/docente/${dataAsign.docenteAula}`,
-       payload
-     )
-     .then((res) => {
-       Swal.fire(
-         "Curso Asignado con éxito!",
-         "El curso se ha asignado exitosamente.",
-         "success"
-       );
-       console.log("Curso Asignado con éxito");
-     })
-     .catch((error) => {
-       Swal.fire({
-         icon: "error",
-         title: "Error",
-         text: "Error al intentar asignar el curso, intente nuevamente",
-       });
-       console.log(error);
-     });
- };
+  const onSubmit = (dataAsign) => {
+    const payload = { curso: dataAsign.cursoNivel };
 
+    axios
+      .patch(
+        `http://localhost:5000/api/v1/docente/${dataAsign.docenteAula}`,
+        payload
+      )
+      .then((res) => {
+        Swal.fire(
+          "Curso Asignado con éxito!",
+          "El curso se ha asignado exitosamente.",
+          "success"
+        );
+        console.log("Curso Asignado con éxito");
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al intentar asignar el curso, intente nuevamente",
+        });
+        console.log(error);
+      });
+    reset({
+      cursoNivel: "",
+      docenteAula: "",
+    })
+    
+  };
 
   const getDocente = () => {
     // Fetch API to get the list of docentes
@@ -59,7 +70,6 @@ const AsignarCursoDocente = () => {
         console.log(error);
       });
   };
- 
 
   useEffect(() => {
     getDocente();
@@ -131,6 +141,6 @@ const AsignarCursoDocente = () => {
       </div>
     </>
   );
-}
+};
 
-export default AsignarCursoDocente
+export default AsignarCursoDocente;

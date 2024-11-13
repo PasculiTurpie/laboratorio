@@ -8,7 +8,7 @@ const FormDocente = () => {
   const {
     register,
     formState: { errors },
-    handleSubmit,
+    handleSubmit, reset
   } = useForm({
     defaultValues: {
       nombreDocente: "",
@@ -16,6 +16,8 @@ const FormDocente = () => {
       emailDocente: ""
     },
   });
+  
+
 
   const onSubmit = (dataDocente) => {
     console.log({dataDocente});
@@ -39,6 +41,13 @@ const FormDocente = () => {
           error
         });
       });
+    
+    reset({
+      nombreDocente: "",
+      apellidoDocente: "",
+      emailDocente: "",
+    });
+
   };
 
   return (
@@ -57,7 +66,7 @@ const FormDocente = () => {
                 {...register("nombreDocente", {
                   required: true,
                   maxLength: 50,
-                  minLength: 10,
+                  minLength: 3,
                 })}
               />
               {errors?.nombreDocente?.type === "required" && (
@@ -70,7 +79,7 @@ const FormDocente = () => {
               )}
               {errors?.nombreDocente?.type === "minLength" && (
                 <span className="error">
-                  El campo debe tener mínimo 10 caractres
+                  El campo debe tener mínimo 6 caractres
                 </span>
               )}
             </div>
@@ -83,7 +92,7 @@ const FormDocente = () => {
                 {...register("apellidoDocente", {
                   required: true,
                   maxLength: 50,
-                  minLength: 10,
+                  minLength: 6,
                 })}
               />
               {errors?.apellidoDocente?.type === "required" && (
@@ -96,7 +105,7 @@ const FormDocente = () => {
               )}
               {errors?.apellidoDocente?.type === "minLength" && (
                 <span className="error">
-                  El campo debe tener mínimo 10 caractres
+                  El campo debe tener mínimo 6 caractres
                 </span>
               )}
             </div>
@@ -121,7 +130,11 @@ const FormDocente = () => {
 
             <br />
             <div className="button-group">
-              <button className="btn-curso" type="submit">
+              <button
+                className="btn-curso"
+                type="submit"
+
+              >
                 Crear Docente
               </button>
             </div>

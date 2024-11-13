@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./FormAttendance.css";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 const FormAttendance = () => {
   const [curso, setCurso] = useState([]);
@@ -10,11 +11,12 @@ const FormAttendance = () => {
   const [herramientas, setHerramientas] = useState([]);
   const [targetTools, setTargetTools] = useState();
   const [objetivos, setObjetivos] = useState([]);
+  const [idDocente, setIdDocente] = useState('');
 
   const {
     register,
     formState: { errors },
-    handleSubmit,
+    handleSubmit, reset
   } = useForm({
     defaultValues: {
       docenteAula: "",
@@ -27,15 +29,40 @@ const FormAttendance = () => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
+    axios.post(`http://localhost:5000/api/v1/asistencia`, data)
+      .then((response) => {
+        Swal.fire(
+          'Asistencia registrada',
+          'La asistencia ha sido registrada con éxito',
+          'success'
+        )
+      }).catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al registrar la asistencia, intente nuevamente',
+          });
+        console.error(error,{
+            message: 'Error al registrar la asistencia',
+          });
+      })
+    reset({
+      docenteAula: "",
+      cursoNivel: "",
+      matricula: "",
+      asistencia: "",
+      herramienta: "",
+      objetivo: "",
+    });
+    setMatriculaCurso('0')
   };
 
   const getCurso = () => {
     // Fetch API to get the list of curso
     axios
-      .get("http://localhost:5000/api/v1/curso")
+      .get(`http://localhost:5000/api/v1/docente/${idDocente}`)
       .then((response) => {
-        setCurso(response.data);
+        setCurso(response.data.docente.curso);
       })
       .catch((error) => {
         console.log(error);
@@ -69,23 +96,29 @@ const FormAttendance = () => {
     axios
       .get(`http://localhost:5000/api/v1/herramienta/${targetTools}`)
       .then((response) => {
-        console.log(response.data.objetivo);
         setObjetivos(response.data.objetivo);
       })
       .catch((error) => {
+
         console.log(error);
       });
   };
 
-
-
+  const handleClickIdDocente = (evt) => {
+    console.log(evt.target.value)
+    setIdDocente(evt.target.value);
+  };
+  
   
   useEffect(() => {
     getDocente();
-    getCurso();
     getHerramientas();
     getObjetivos();
   }, [targetTools]);
+
+  useEffect(() => {
+    getCurso();
+  }, [idDocente]);
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -100,13 +133,14 @@ const FormAttendance = () => {
           <select
             className="selected-item"
             name="docenteAula"
+          onClick={handleClickIdDocente}
             {...register("docenteAula", {
               required: "Seleccione un docente",
             })}
           >
             <option value="">Docente</option>
             {docente.map((docente) => (
-              <option key={docente.id} value={docente.id}>
+              <option key={docente._id} value={docente._id}>
                 {docente.nombreDocente.toUpperCase()}{" "}
                 {docente.apellidoDocente.toUpperCase()}
               </option>
@@ -123,7 +157,6 @@ const FormAttendance = () => {
             <select
               className="group-selected-item selected-item"
               onClick={(e) => {
-                console.log(e.target.selectedOptions[0].dataset.matricula);
                 setMatriculaCurso(
                   e.target.selectedOptions[0].dataset.matricula
                 );
@@ -133,7 +166,7 @@ const FormAttendance = () => {
                 required: "Seleccione un curso",
               })}
             >
-              <option value="">Curso</option>
+              <option value=" ">Curso</option>
               {curso?.map((item) => {
                 return (
                   <option
@@ -201,7 +234,6 @@ const FormAttendance = () => {
             className="selected-item"
             name="herramientas"
             onClick={(e) => {
-              console.log(e.target.selectedOptions[0].dataset.category);
               setTargetTools(e.target.selectedOptions[0].dataset.category);
             }}
             {...register("herramienta", {
