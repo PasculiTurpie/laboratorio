@@ -59,7 +59,7 @@ const Dashboard = () => {
   return (
     <>
       <h1>Asistencia por curso a laboratorio de computación</h1>
-      <ResponsiveContainer width="100%" height="50%" aspect={1}>
+      <ResponsiveContainer width="100%" height={600} aspect={1}>
         <BarChart
           data={courseAttendance}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
