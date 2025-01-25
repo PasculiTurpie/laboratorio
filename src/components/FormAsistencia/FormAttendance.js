@@ -13,6 +13,9 @@ const FormAttendance = () => {
   const [objetivos, setObjetivos] = useState([]);
   const [idDocente, setIdDocente] = useState('');
 
+
+  
+
   const {
     register,
     formState: { errors },
@@ -59,10 +62,12 @@ const FormAttendance = () => {
 
   const getCurso = () => {
     // Fetch API to get the list of curso
-    axios
-      .get(`http://localhost:5000/api/v1/docente/${idDocente}`)
-      .then((response) => {
-        setCurso(response.data.docente.curso);
+    console.log(idDocente)
+    fetch(`http://localhost:5000/api/v1/docente/${idDocente}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.curso);
+        setCurso(data.curso);
       })
       .catch((error) => {
         console.log(error);
@@ -70,22 +75,20 @@ const FormAttendance = () => {
   };
 
   const getDocente = () => {
-    // Fetch API to get the list of docentes
-    axios
-      .get("http://localhost:5000/api/v1/docente")
-      .then((response) => {
-        setDocente(response.data.allDocente);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+   fetch("http://localhost:5000/api/v1/docente")
+     .then((response) => response.json())
+     .then((data) => {
+       console.log(data.allDocente);
+       setDocente(data.allDocente);
+     });
   };
 
   const getHerramientas = () => {
-    axios
-      .get("http://localhost:5000/api/v1/herramienta")
-      .then((response) => {
-        setHerramientas(response.data.tools);
+    fetch("http://localhost:5000/api/v1/herramienta")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.tools);
+        setHerramientas(data.tools);
       })
       .catch((error) => {
         console.log(error);
@@ -93,13 +96,13 @@ const FormAttendance = () => {
   };
 
   const getObjetivos = () => {
-    axios
-      .get(`http://localhost:5000/api/v1/herramienta/${targetTools}`)
-      .then((response) => {
-        setObjetivos(response.data.objetivo);
+    fetch(`http://localhost:5000/api/v1/herramienta/${targetTools}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setObjetivos(data.objetivo);
       })
       .catch((error) => {
-
         console.log(error);
       });
   };
@@ -118,6 +121,7 @@ const FormAttendance = () => {
 
   useEffect(() => {
     getCurso();
+    console.log(idDocente)
   }, [idDocente]);
   return (
     <div className="container-form">
@@ -157,10 +161,11 @@ const FormAttendance = () => {
             <select
               className="group-selected-item selected-item"
               onClick={(e) => {
-                setMatriculaCurso(
-                  e.target.selectedOptions[0].dataset.matricula
-                );
-              }}
+                const cursoSet = e.target.value;
+                const resultCurso = curso.filter((item) => item.nombreCurso === cursoSet);
+                setMatriculaCurso(resultCurso[0].matriculaCurso || 0);
+              }
+            }
               name="cursoNivel"
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
