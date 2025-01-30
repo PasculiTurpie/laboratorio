@@ -67,6 +67,7 @@ const FormAttendance = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data.curso);
+        setMatriculaCurso(data.curso[0].matriculaCurso);
         setCurso(data.curso);
       })
       .catch((error) => {
@@ -110,6 +111,7 @@ const FormAttendance = () => {
   const handleClickIdDocente = (evt) => {
     console.log(evt.target.value)
     setIdDocente(evt.target.value);
+    
   };
   
   
@@ -137,7 +139,7 @@ const FormAttendance = () => {
           <select
             className="selected-item"
             name="docenteAula"
-          onClick={handleClickIdDocente}
+            onClick={handleClickIdDocente}
             {...register("docenteAula", {
               required: "Seleccione un docente",
             })}
@@ -162,16 +164,26 @@ const FormAttendance = () => {
               className="group-selected-item selected-item"
               onClick={(e) => {
                 const cursoSet = e.target.value;
-                const resultCurso = curso.filter((item) => item.nombreCurso === cursoSet);
-                setMatriculaCurso(resultCurso[0].matriculaCurso || 0);
-              }
-            }
+                if (!cursoSet) {
+                  Swal.fire({
+                    title: "Error",
+                    text: "Debe seleccionar primero un docente",
+                    icon: "error",
+                  });
+                } else {
+                  let resultCurso = [];
+                  
+                  resultCurso = curso.filter(
+                    (item) => item.nombreCurso === cursoSet);
+                  setMatriculaCurso(resultCurso[0].matriculaCurso);
+                }
+              }}
+              
               name="cursoNivel"
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
               })}
             >
-              <option value=" ">Curso</option>
               {curso?.map((item) => {
                 return (
                   <option
@@ -184,7 +196,6 @@ const FormAttendance = () => {
                 );
               })}
             </select>
-         
           </div>
 
           <div className="select-item-self select-item-number">
@@ -263,21 +274,23 @@ const FormAttendance = () => {
 
         <div className="select-group">
           <label htmlFor="objetivo">Objetivos a cumplir</label>
-          <select className="selected-item" name="objetivo"
-            {
-          ...register('objetivo', {
-              required: 'Debe seleccionar un objetivo',
-            })
-            }>
+          <select
+            className="selected-item"
+            name="objetivo"
+            {...register("objetivo", {
+              required: "Debe seleccionar un objetivo",
+            })}
+          >
             <option value="">Seleccionar Objetivo</option>
-            {
-              objetivos?.map((obj) => (
-                <option key={obj._id} value={obj.nombreObjetivo}>
-                  {obj.nombreObjetivo.toUpperCase()}
-                </option>
+            {objetivos?.map((obj) => (
+              <option key={obj._id} value={obj.nombreObjetivo}>
+                {obj.nombreObjetivo.toUpperCase()}
+              </option>
             ))}
           </select>
-          {errors?.objetivo && <span className="error">{ errors.objetivo.message}</span>}
+          {errors?.objetivo && (
+            <span className="error">{errors.objetivo.message}</span>
+          )}
         </div>
 
         <div className="button-group">
