@@ -32,6 +32,7 @@ const FormAttendance = () => {
   });
 
   const onSubmit = (data) => {
+    console.log(cursoValue);
     axios
       .post(`http://localhost:5000/api/v1/asistencia`, data)
       .then((response) => {
@@ -65,6 +66,7 @@ const FormAttendance = () => {
       .then((data) => {
         console.log(data.allDocente);
         setDocente(data.allDocente);
+        
       });
   };
 
@@ -74,10 +76,10 @@ const FormAttendance = () => {
       ._getDocenteById(idDocente)
       .then((response) => response.json())
       .then((data) => {
+        setCurso(data.curso);
         console.log(data.curso[0].nombreCurso);
         setCursoValue(data.curso[0].nombreCurso);
         setMatriculaCurso(data.curso[0].matriculaCurso);
-        setCurso(data.curso);
       })
       .catch((error) => {
         console.log(error);
@@ -126,7 +128,9 @@ const FormAttendance = () => {
     console.log(idDocente);
   }, [idDocente]);
 
-  console.log(cursoValue)
+  useEffect(() => {
+    
+  })
 
   return (
     <div className="container-form">
@@ -165,7 +169,7 @@ const FormAttendance = () => {
             <label htmlFor="cursoNivel">Curso</label>
             <select
               className="group-selected-item selected-item"
-              onChange={(e) => {
+              onClick={(e) => {
                 const cursoSet = e.target.value;
                 if (!cursoSet) {
                   Swal.fire({
@@ -174,11 +178,12 @@ const FormAttendance = () => {
                     icon: "error",
                   });
                 } else {
-                  const resultCurso = curso.find(
+                  let resultCurso = [];
+                  resultCurso = curso.filter(
                     (item) => item.nombreCurso === cursoSet
                   );
                   setCursoValue(cursoSet);
-                  setMatriculaCurso(resultCurso[0].matriculaCurso || "");
+                  setMatriculaCurso(resultCurso[0].matriculaCurso);
                 }
               }}
               name="cursoNivel"
