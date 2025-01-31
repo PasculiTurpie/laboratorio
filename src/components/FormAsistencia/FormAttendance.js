@@ -3,6 +3,7 @@ import "./FormAttendance.css";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import api from "../utils/apiv1";
 
 const FormAttendance = () => {
   const [curso, setCurso] = useState([]);
@@ -11,15 +12,14 @@ const FormAttendance = () => {
   const [herramientas, setHerramientas] = useState([]);
   const [targetTools, setTargetTools] = useState();
   const [objetivos, setObjetivos] = useState([]);
-  const [idDocente, setIdDocente] = useState('');
-
-
-  
+  const [idDocente, setIdDocente] = useState("");
+  const [cursoValue, setCursoValue] = useState("");
 
   const {
     register,
     formState: { errors },
-    handleSubmit, reset
+    handleSubmit,
+    reset,
   } = useForm({
     defaultValues: {
       docenteAula: "",
@@ -32,23 +32,25 @@ const FormAttendance = () => {
   });
 
   const onSubmit = (data) => {
-    axios.post(`http://localhost:5000/api/v1/asistencia`, data)
+    axios
+      .post(`http://localhost:5000/api/v1/asistencia`, data)
       .then((response) => {
         Swal.fire(
-          'Asistencia registrada',
-          'La asistencia ha sido registrada con éxito',
-          'success'
-        )
-      }).catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error al registrar la asistencia, intente nuevamente',
-          });
-        console.error(error,{
-            message: 'Error al registrar la asistencia',
-          });
+          "Asistencia registrada",
+          "La asistencia ha sido registrada con éxito",
+          "success"
+        );
       })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al registrar la asistencia, intente nuevamente",
+        });
+        console.error(error, {
+          message: "Error al registrar la asistencia",
+        });
+      });
     reset({
       docenteAula: "",
       cursoNivel: "",
@@ -57,13 +59,22 @@ const FormAttendance = () => {
       herramienta: "",
       objetivo: "",
     });
-    setMatriculaCurso('0')
+    setMatriculaCurso("0");
+  };
+  const getDocente = () => {
+    api
+      ._getAllDocentes()
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.allDocente);
+        setDocente(data.allDocente);
+      });
   };
 
   const getCurso = () => {
     // Fetch API to get the list of curso
-    console.log(idDocente)
-    fetch(`http://localhost:5000/api/v1/docente/${idDocente}`)
+    api
+      ._getDocenteById(idDocente)
       .then((response) => response.json())
       .then((data) => {
         console.log(data.curso);
@@ -75,17 +86,9 @@ const FormAttendance = () => {
       });
   };
 
-  const getDocente = () => {
-   fetch("http://localhost:5000/api/v1/docente")
-     .then((response) => response.json())
-     .then((data) => {
-       console.log(data.allDocente);
-       setDocente(data.allDocente);
-     });
-  };
-
   const getHerramientas = () => {
-    fetch("http://localhost:5000/api/v1/herramienta")
+    api
+      ._getTools()
       .then((response) => response.json())
       .then((data) => {
         console.log(data.tools);
@@ -97,7 +100,8 @@ const FormAttendance = () => {
   };
 
   const getObjetivos = () => {
-    fetch(`http://localhost:5000/api/v1/herramienta/${targetTools}`)
+    api
+      ._getObjetive(targetTools)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -109,12 +113,10 @@ const FormAttendance = () => {
   };
 
   const handleClickIdDocente = (evt) => {
-    console.log(evt.target.value)
+    console.log(evt.target.value);
     setIdDocente(evt.target.value);
-    
   };
-  
-  
+
   useEffect(() => {
     getDocente();
     getHerramientas();
@@ -123,8 +125,9 @@ const FormAttendance = () => {
 
   useEffect(() => {
     getCurso();
-    console.log(idDocente)
+    console.log(idDocente);
   }, [idDocente]);
+
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -172,13 +175,12 @@ const FormAttendance = () => {
                   });
                 } else {
                   let resultCurso = [];
-                  
                   resultCurso = curso.filter(
-                    (item) => item.nombreCurso === cursoSet);
+                    (item) => item.nombreCurso === cursoSet
+                  );
                   setMatriculaCurso(resultCurso[0].matriculaCurso);
                 }
               }}
-              
               name="cursoNivel"
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
@@ -228,7 +230,7 @@ const FormAttendance = () => {
                 },
                 max: {
                   value: `${matriculaCurso}`,
-                  message: `La asistencia ser un número menor o igual a ${matriculaCurso}`,
+                  message: `La asistencia debe ser un número menor o igual a ${matriculaCurso}`,
                 },
               })}
             />
@@ -253,7 +255,7 @@ const FormAttendance = () => {
               setTargetTools(e.target.selectedOptions[0].dataset.category);
             }}
             {...register("herramienta", {
-              required: `Debe seleccionar una opción`,
+              required: `Debe seleccionar una herramineta`,
             })}
           >
             <option value="">Seleccionar Herramienta</option>

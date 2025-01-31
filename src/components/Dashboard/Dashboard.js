@@ -54,15 +54,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     getAttendance();
-  }, []);
+  }, [courseAttendance]);
 
   return (
     <>
       <h1>Asistencia por curso a laboratorio de computación</h1>
-      <ResponsiveContainer width="100%" height={600} aspect={1}>
+      <ResponsiveContainer width="100%" height={250} aspect={5}>
         <BarChart
           data={courseAttendance}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
         >
           <CartesianGrid strokeDasharray="4 1 2" />
           <XAxis dataKey="curso" />
