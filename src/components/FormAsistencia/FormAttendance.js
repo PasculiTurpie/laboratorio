@@ -45,11 +45,8 @@ const FormAttendance = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Error al registrar la asistencia, intente nuevamente",
+          text: `${error}: Error al registrar la asistencia, intente nuevamente`,
         });
-        /* console.error(error, {
-          message: "Error al registrar la asistencia",
-        }); */
       });
     reset({
       docenteAula: "",
@@ -77,7 +74,8 @@ const FormAttendance = () => {
       ._getDocenteById(idDocente)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.curso);
+        console.log(data.curso[0].nombreCurso);
+        setCursoValue(data.curso[0].nombreCurso);
         setMatriculaCurso(data.curso[0].matriculaCurso);
         setCurso(data.curso);
       })
@@ -128,6 +126,8 @@ const FormAttendance = () => {
     console.log(idDocente);
   }, [idDocente]);
 
+  console.log(cursoValue)
+
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -165,7 +165,7 @@ const FormAttendance = () => {
             <label htmlFor="cursoNivel">Curso</label>
             <select
               className="group-selected-item selected-item"
-              onClick={(e) => {
+              onChange={(e) => {
                 const cursoSet = e.target.value;
                 if (!cursoSet) {
                   Swal.fire({
@@ -174,11 +174,11 @@ const FormAttendance = () => {
                     icon: "error",
                   });
                 } else {
-                  let resultCurso = [];
-                  resultCurso = curso.filter(
+                  const resultCurso = curso.find(
                     (item) => item.nombreCurso === cursoSet
                   );
-                  setMatriculaCurso(resultCurso[0].matriculaCurso);
+                  setCursoValue(cursoSet);
+                  setMatriculaCurso(resultCurso[0].matriculaCurso || "");
                 }
               }}
               name="cursoNivel"
