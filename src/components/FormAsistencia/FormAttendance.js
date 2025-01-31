@@ -47,9 +47,9 @@ const FormAttendance = () => {
           title: "Error",
           text: "Error al registrar la asistencia, intente nuevamente",
         });
-        console.error(error, {
+        /* console.error(error, {
           message: "Error al registrar la asistencia",
-        });
+        }); */
       });
     reset({
       docenteAula: "",
@@ -296,9 +296,7 @@ const FormAttendance = () => {
         </div>
 
         <div className="button-group">
-          <button className="btn-enviar" type="submit">
-            Enviar
-          </button>
+          <input type="submit" value="Enviar" className="btn-enviar" />
         </div>
       </form>
     </div>
