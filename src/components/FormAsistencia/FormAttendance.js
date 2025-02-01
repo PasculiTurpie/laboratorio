@@ -32,15 +32,14 @@ const FormAttendance = () => {
   });
 
   const onSubmit = (data) => {
-    console.log(cursoValue);
     axios
       .post(`http://localhost:5000/api/v1/asistencia`, data)
       .then((response) => {
-        Swal.fire(
-          "Asistencia registrada",
-          "La asistencia ha sido registrada con éxito",
-          "success"
-        );
+        Swal.fire({
+          title: "Asistencia registrada",
+          text: `La asistencia ha sido registrada con éxito`,
+          icon: "success",
+        });
       })
       .catch((error) => {
         Swal.fire({
@@ -66,7 +65,6 @@ const FormAttendance = () => {
       .then((data) => {
         console.log(data.allDocente);
         setDocente(data.allDocente);
-        
       });
   };
 
@@ -104,7 +102,6 @@ const FormAttendance = () => {
       ._getObjetive(targetTools)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setObjetivos(data.objetivo);
       })
       .catch((error) => {
@@ -128,9 +125,7 @@ const FormAttendance = () => {
     console.log(idDocente);
   }, [idDocente]);
 
-  useEffect(() => {
-    
-  })
+  useEffect(() => {});
 
   return (
     <div className="container-form">
@@ -170,7 +165,9 @@ const FormAttendance = () => {
             <select
               className="group-selected-item selected-item"
               onClick={(e) => {
+                console.log(cursoValue);
                 const cursoSet = e.target.value;
+                console.log(cursoSet);
                 if (!cursoSet) {
                   Swal.fire({
                     title: "Error",
@@ -178,13 +175,11 @@ const FormAttendance = () => {
                     icon: "error",
                   });
                 } else {
-                  let resultCurso = [];
-                  resultCurso = curso.filter(
-                    (item) => item.nombreCurso === cursoSet
-                  );
+                  const result = curso.find((item) => item.nombreCurso === cursoSet);
                   setCursoValue(cursoSet);
-                  setMatriculaCurso(resultCurso[0].matriculaCurso);
+                  setMatriculaCurso(result.matriculaCurso);
                 }
+                
               }}
               name="cursoNivel"
               {...register("cursoNivel", {
