@@ -175,11 +175,12 @@ const FormAttendance = () => {
                     icon: "error",
                   });
                 } else {
-                  const result = curso.find((item) => item.nombreCurso === cursoSet);
+                  const result = curso.find(
+                    (item) => item.nombreCurso === cursoSet
+                  );
                   setCursoValue(cursoSet);
                   setMatriculaCurso(result.matriculaCurso);
                 }
-                
               }}
               name="cursoNivel"
               {...register("cursoNivel", {
