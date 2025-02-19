@@ -56,7 +56,7 @@ const FormAttendance = () => {
       herramienta: "",
       objetivo: "",
     });
-    setMatriculaCurso("0");
+    setMatriculaCurso(" ");
   };
   const getDocente = () => {
     api
@@ -75,7 +75,7 @@ const FormAttendance = () => {
       .then((response) => response.json())
       .then((data) => {
         setCurso(data.curso);
-        console.log(data.curso[0].nombreCurso);
+        console.log(data.curso[0].nombreCurso);//Aqui se produce el curso
         setCursoValue(data.curso[0].nombreCurso);
         setMatriculaCurso(data.curso[0].matriculaCurso);
       })
@@ -125,7 +125,30 @@ const FormAttendance = () => {
     console.log(idDocente);
   }, [idDocente]);
 
-  useEffect(() => {});
+  const handleCursoChange = (e) => {
+    console.log(cursoValue);
+    const cursoSet = e.target.value;
+    console.log(cursoSet);
+
+    if (!cursoSet) {
+      Swal.fire({
+        title: "Error",
+        text: "Debe seleccionar primero un docente",
+        icon: "error",
+      });
+      return;
+    }
+
+    const result = curso.find((item) => item.nombreCurso === cursoSet);
+
+    if (result) {
+      setCursoValue(cursoSet);
+      setMatriculaCurso(result.matriculaCurso);
+    } else {
+      console.warn("Curso no encontrado");
+    }
+  };
+
 
   return (
     <div className="container-form">
@@ -164,24 +187,8 @@ const FormAttendance = () => {
             <label htmlFor="cursoNivel">Curso</label>
             <select
               className="group-selected-item selected-item"
-              onClick={(e) => {
-                console.log(cursoValue);
-                const cursoSet = e.target.value;
-                console.log(cursoSet);
-                if (!cursoSet) {
-                  Swal.fire({
-                    title: "Error",
-                    text: "Debe seleccionar primero un docente",
-                    icon: "error",
-                  });
-                } else {
-                  const result = curso.find(
-                    (item) => item.nombreCurso === cursoSet
-                  );
-                  setCursoValue(cursoSet);
-                  setMatriculaCurso(result.matriculaCurso);
-                }
-              }}
+              
+              onChange={handleCursoChange}
               name="cursoNivel"
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
