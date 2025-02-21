@@ -13,10 +13,7 @@ const FormAttendance = () => {
   const [targetTools, setTargetTools] = useState();
   const [objetivos, setObjetivos] = useState([]);
   const [idDocente, setIdDocente] = useState("");
-  const [cursoValue, setCursoValue] = useState("");
-
-
-  console.log(curso);
+  const [cursoValue, setCursoValue] = useState("")
 
   const {
     register,
@@ -66,7 +63,6 @@ const FormAttendance = () => {
       ._getAllDocentes()
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.allDocente);
         setDocente(data.allDocente);
       });
   };
@@ -78,7 +74,6 @@ const FormAttendance = () => {
       .then((response) => response.json())
       .then((data) => {
         setCurso(data.curso);
-        console.log(data.curso[0].nombreCurso);//Aqui se produce el curso
         setCursoValue(data.curso[0].nombreCurso);
         setMatriculaCurso(data.curso[0].matriculaCurso);
       })
@@ -92,7 +87,6 @@ const FormAttendance = () => {
       ._getTools()
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.tools);
         setHerramientas(data.tools);
       })
       .catch((error) => {
@@ -143,7 +137,6 @@ const FormAttendance = () => {
       return;
     }
     const result = curso.find((item) => item.nombreCurso === cursoSet);
-    console.log(result);
     if (result) {
       setCursoValue(cursoSet);
       setMatriculaCurso(result.matriculaCurso);
@@ -152,7 +145,8 @@ const FormAttendance = () => {
     }
   };
 
-  const handleCursoOnChange = () => {
+  const handleCursoOnChange = (e) => {
+    console.log(e.target.value)
     console.log(cursoValue, matriculaCurso);
   };
 
@@ -202,7 +196,6 @@ const FormAttendance = () => {
               })}
             >
               {curso?.map((item) => {
-                console.log(item)
                 {console.log(cursoValue, matriculaCurso)}
                 return (
                   <option

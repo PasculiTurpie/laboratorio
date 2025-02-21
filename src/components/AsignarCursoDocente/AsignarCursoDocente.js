@@ -31,7 +31,6 @@ const AsignarCursoDocente = () => {
           "El curso se ha asignado exitosamente.",
           "success"
         );
-        console.log("Curso Asignado con éxito");
       })
       .catch((error) => {
         Swal.fire({
