@@ -15,6 +15,9 @@ const FormAttendance = () => {
   const [idDocente, setIdDocente] = useState("");
   const [cursoValue, setCursoValue] = useState("");
 
+
+  console.log(curso);
+
   const {
     register,
     formState: { errors },
@@ -125,12 +128,13 @@ const FormAttendance = () => {
     console.log(idDocente);
   }, [idDocente]);
 
-  const handleCursoChange = (e) => {
-    console.log(cursoValue);
-    const cursoSet = e.target.value;
+  const handleCursoClick = (e) => {
+    let cursoSet = cursoValue;
+    cursoSet = e.target.value;
     console.log(cursoSet);
-
-    if (!cursoSet) {
+    
+    setCursoValue(cursoSet);
+    if (!cursoSet || !cursoSet === undefined) {
       Swal.fire({
         title: "Error",
         text: "Debe seleccionar primero un docente",
@@ -138,15 +142,18 @@ const FormAttendance = () => {
       });
       return;
     }
-
     const result = curso.find((item) => item.nombreCurso === cursoSet);
-
+    console.log(result);
     if (result) {
       setCursoValue(cursoSet);
       setMatriculaCurso(result.matriculaCurso);
     } else {
       console.warn("Curso no encontrado");
     }
+  };
+
+  const handleCursoOnChange = () => {
+    console.log(cursoValue, matriculaCurso);
   };
 
 
@@ -187,22 +194,26 @@ const FormAttendance = () => {
             <label htmlFor="cursoNivel">Curso</label>
             <select
               className="group-selected-item selected-item"
-              
-              onChange={handleCursoChange}
+              onClick={handleCursoClick}
+              onChange={handleCursoOnChange}
               name="cursoNivel"
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
               })}
             >
               {curso?.map((item) => {
+                console.log(item)
+                {console.log(cursoValue, matriculaCurso)}
                 return (
                   <option
                     key={item._id}
                     value={item.nombreCurso}
                     data-matricula={item.matricula}
+
                   >
                     {item.nombreCurso.toUpperCase()}
                   </option>
+
                 );
               })}
             </select>
