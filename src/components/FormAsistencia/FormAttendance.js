@@ -74,8 +74,8 @@ const FormAttendance = () => {
       .then((response) => response.json())
       .then((data) => {
         setCurso(data.curso);
-        setCursoValue(data.curso[0].nombreCurso);
-        setMatriculaCurso(data.curso[0].matriculaCurso);
+        /* setCursoValue(data.curso[0].nombreCurso);
+        setMatriculaCurso(data.curso[0].matriculaCurso); */
       })
       .catch((error) => {
         console.log(error);
@@ -128,7 +128,7 @@ const FormAttendance = () => {
     console.log(cursoSet);
     
     setCursoValue(cursoSet);
-    if (!cursoSet || !cursoSet === undefined) {
+    if (!cursoSet || cursoSet === "curso") {
       Swal.fire({
         title: "Error",
         text: "Debe seleccionar primero un docente",
@@ -195,6 +195,7 @@ const FormAttendance = () => {
                 required: "Seleccione un curso",
               })}
             >
+              <option value="curso">Curso</option>
               {curso?.map((item) => {
                 {console.log(cursoValue, matriculaCurso)}
                 return (
