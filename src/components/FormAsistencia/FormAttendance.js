@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import api from "../utils/apiv1";
 
 const FormAttendance = () => {
+  const [name,setName] =useState('')
   const [curso, setCurso] = useState([]);
   const [docente, setDocente] = useState([]);
   const [matriculaCurso, setMatriculaCurso] = useState("");
