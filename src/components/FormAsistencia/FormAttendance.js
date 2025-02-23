@@ -69,6 +69,8 @@ const FormAttendance = () => {
 
   const getCurso = () => {
     // Fetch API to get the list of curso
+    setMatriculaCurso(" ");
+
     api
       ._getDocenteById(idDocente)
       .then((response) => response.json())
@@ -155,6 +157,7 @@ const FormAttendance = () => {
     } else {
       setMatriculaCurso("");
     }
+    console.log(curso)
   };
   
   
