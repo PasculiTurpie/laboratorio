@@ -197,7 +197,7 @@ console.log(cursoValue, matriculaCurso)
 
         <div className="group-selected">
           <div className="select-item-self select-item-number">
-            <label htmlFor="cursoNivel">Curso</label>
+            <label htmlFor="cursoNivel">Cursos</label>
             <select
               className="group-selected-item selected-item"
               onInput={handleCursoOnChange}
