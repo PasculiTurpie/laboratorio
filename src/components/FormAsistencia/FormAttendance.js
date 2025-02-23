@@ -118,17 +118,17 @@ const FormAttendance = () => {
   }, [targetTools]);
 
   useEffect(() => {
-    getCurso();
-    console.log(idDocente);
+    if (idDocente) {
+      getCurso();
+  }
   }, [idDocente]);
 
-  const handleCursoClick = (e) => {
-    let cursoSet = cursoValue;
-    cursoSet = e.target.value;
-    console.log(cursoSet);
+/*   const handleCursoOnChange = (e) => {
+
+    console.log(e.target.value);
     
     setCursoValue(cursoSet);
-    if (!cursoSet || cursoSet === "curso") {
+    if (!cursoSet) {
       Swal.fire({
         title: "Error",
         text: "Debe seleccionar primero un docente",
@@ -143,14 +143,22 @@ const FormAttendance = () => {
     } else {
       console.warn("Curso no encontrado");
     }
-  };
+  }; */
 
   const handleCursoOnChange = (e) => {
-    console.log(e.target.value)
-    console.log(cursoValue, matriculaCurso);
+    const selectedCurso = e.target.value;
+    setCursoValue(selectedCurso);
+
+    const cursoEncontrado = curso.find((item) => item.nombreCurso === selectedCurso);
+    if (cursoEncontrado) {
+      setMatriculaCurso(cursoEncontrado.matriculaCurso);
+    } else {
+      setMatriculaCurso("");
+    }
   };
-
-
+  
+  
+console.log(cursoValue, matriculaCurso)
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -188,22 +196,20 @@ const FormAttendance = () => {
             <label htmlFor="cursoNivel">Curso</label>
             <select
               className="group-selected-item selected-item"
-              onClick={handleCursoClick}
-              onChange={handleCursoOnChange}
+              onInput={handleCursoOnChange}
               name="cursoNivel"
+              defaultValue=""
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
               })}
             >
               <option value="curso">Curso</option>
               {curso?.map((item) => {
-                {console.log(cursoValue, matriculaCurso)}
+                console.log(item)
                 return (
                   <option
                     key={item._id}
                     value={item.nombreCurso}
-                    data-matricula={item.matricula}
-
                   >
                     {item.nombreCurso.toUpperCase()}
                   </option>
