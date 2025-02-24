@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 import api from "../utils/apiv1";
 
 const FormAttendance = () => {
-  const [name,setName] =useState('')
   const [curso, setCurso] = useState([]);
   const [docente, setDocente] = useState([]);
   const [matriculaCurso, setMatriculaCurso] = useState("");
@@ -14,7 +13,8 @@ const FormAttendance = () => {
   const [targetTools, setTargetTools] = useState();
   const [objetivos, setObjetivos] = useState([]);
   const [idDocente, setIdDocente] = useState("");
-  const [cursoValue, setCursoValue] = useState("")
+  const [cursoValue, setCursoValue] = useState("");
+  const [isLoadingCurso, setIsLoadingCurso] = useState(false);
 
   const {
     register,
@@ -32,33 +32,29 @@ const FormAttendance = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    axios
-      .post(`http://localhost:5000/api/v1/asistencia`, data)
-      .then((response) => {
-        Swal.fire({
-          title: "Asistencia registrada",
-          text: `La asistencia ha sido registrada con éxito`,
-          icon: "success",
-        });
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: `${error}: Error al registrar la asistencia, intente nuevamente`,
-        });
+
+  const onSubmit = async (data) => {
+    console.log(cursoValue)
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/asistencia`,
+        data
+      );
+      Swal.fire({
+        title: "Asistencia registrada",
+        text: `La asistencia ha sido registrada con éxito`,
+        icon: "success",
       });
-    reset({
-      docenteAula: "",
-      cursoNivel: "",
-      matricula: "",
-      asistencia: "",
-      herramienta: "",
-      objetivo: "",
-    });
-    setMatriculaCurso(" ");
+      reset(); // Reseteamos después de que la API responde
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error}: Error al registrar la asistencia, intente nuevamente`,
+      });
+    }
   };
+
   const getDocente = () => {
     api
       ._getAllDocentes()
@@ -68,21 +64,19 @@ const FormAttendance = () => {
       });
   };
 
-  const getCurso = () => {
-    // Fetch API to get the list of curso
-    setMatriculaCurso(" ");
+  const getCurso = async () => {
+    setIsLoadingCurso(true); // Indica que está cargando
+    setMatriculaCurso(""); // Reseteamos la matrícula
 
-    api
-      ._getDocenteById(idDocente)
-      .then((response) => response.json())
-      .then((data) => {
-        setCurso(data.curso);
-        /* setCursoValue(data.curso[0].nombreCurso);
-        setMatriculaCurso(data.curso[0].matriculaCurso); */
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      const response = await api._getDocenteById(idDocente);
+      const data = await response.json();
+      setCurso(data.curso);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoadingCurso(false); // Una vez terminado, habilitamos el formulario
+    }
   };
 
   const getHerramientas = () => {
@@ -150,19 +144,22 @@ const FormAttendance = () => {
 
   const handleCursoOnChange = (e) => {
     const selectedCurso = e.target.value;
+    console.log(e.target.value);
     setCursoValue(selectedCurso);
+    console.log(selectedCurso);
 
     const cursoEncontrado = curso.find((item) => item.nombreCurso === selectedCurso);
+console.log(cursoEncontrado);
     if (cursoEncontrado) {
       setMatriculaCurso(cursoEncontrado.matriculaCurso);
+      setCursoValue(cursoEncontrado.nombreCurso);
     } else {
       setMatriculaCurso("");
     }
-    console.log(curso)
+    console.log(cursoValue);
   };
   
   
-console.log(cursoValue, matriculaCurso)
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -177,7 +174,7 @@ console.log(cursoValue, matriculaCurso)
           <select
             className="selected-item"
             name="docenteAula"
-            onClick={handleClickIdDocente}
+            onInput={handleClickIdDocente}
             {...register("docenteAula", {
               required: "Seleccione un docente",
             })}
@@ -202,22 +199,16 @@ console.log(cursoValue, matriculaCurso)
               className="group-selected-item selected-item"
               onInput={handleCursoOnChange}
               name="cursoNivel"
-              defaultValue=""
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
               })}
             >
               <option value="curso">Curso</option>
               {curso?.map((item) => {
-                console.log(item)
                 return (
-                  <option
-                    key={item._id}
-                    value={item.nombreCurso}
-                  >
+                  <option key={item._id}>
                     {item.nombreCurso.toUpperCase()}
                   </option>
-
                 );
               })}
             </select>
@@ -274,7 +265,7 @@ console.log(cursoValue, matriculaCurso)
           <select
             className="selected-item"
             name="herramientas"
-            onClick={(e) => {
+            onInput={(e) => {
               setTargetTools(e.target.selectedOptions[0].dataset.category);
             }}
             {...register("herramienta", {
@@ -319,7 +310,12 @@ console.log(cursoValue, matriculaCurso)
         </div>
 
         <div className="button-group">
-          <input type="submit" value="Enviar" className="btn-enviar" />
+          <input
+            type="submit"
+            value="Enviar"
+            className="btn-enviar"
+            disabled={isLoadingCurso}
+          />
         </div>
       </form>
     </div>
