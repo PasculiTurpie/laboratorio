@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import api from "../utils/apiv1";
 
 const FormAttendance = () => {
-  const [curso, setCurso] = useState([]);
+  const [cursoFull, setCursoFull] = useState([]);
   const [docente, setDocente] = useState([]);
   const [matriculaCurso, setMatriculaCurso] = useState("");
   const [herramientas, setHerramientas] = useState([]);
@@ -32,13 +32,13 @@ const FormAttendance = () => {
     },
   });
 
-
   const onSubmit = async (data) => {
-    console.log(cursoValue)
+    const updatedData = { ...data, cursoNivel: cursoValue }; // Asegura que el valor actualizado se envíe
+  
     try {
       const response = await axios.post(
         `http://localhost:5000/api/v1/asistencia`,
-        data
+        updatedData
       );
       Swal.fire({
         title: "Asistencia registrada",
@@ -54,6 +54,7 @@ const FormAttendance = () => {
       });
     }
   };
+  
 
   const getDocente = () => {
     api
@@ -71,7 +72,7 @@ const FormAttendance = () => {
     try {
       const response = await api._getDocenteById(idDocente);
       const data = await response.json();
-      setCurso(data.curso);
+      setCursoFull(data.curso);
     } catch (error) {
       console.error(error);
     } finally {
@@ -117,49 +118,23 @@ const FormAttendance = () => {
   useEffect(() => {
     if (idDocente) {
       getCurso();
-  }
+    }
   }, [idDocente]);
 
-/*   const handleCursoOnChange = (e) => {
-
-    console.log(e.target.value);
-    
-    setCursoValue(cursoSet);
-    if (!cursoSet) {
-      Swal.fire({
-        title: "Error",
-        text: "Debe seleccionar primero un docente",
-        icon: "error",
-      });
-      return;
-    }
-    const result = curso.find((item) => item.nombreCurso === cursoSet);
-    if (result) {
-      setCursoValue(cursoSet);
-      setMatriculaCurso(result.matriculaCurso);
-    } else {
-      console.warn("Curso no encontrado");
-    }
-  }; */
+  useEffect(() => {
+    console.log("Nuevo valor de cursoValue:", cursoValue);
+  }, [cursoValue]);
 
   const handleCursoOnChange = (e) => {
     const selectedCurso = e.target.value;
-    console.log(e.target.value);
-    setCursoValue(selectedCurso);
-    console.log(selectedCurso);
-
-    const cursoEncontrado = curso.find((item) => item.nombreCurso === selectedCurso);
-console.log(cursoEncontrado);
-    if (cursoEncontrado) {
-      setMatriculaCurso(cursoEncontrado.matriculaCurso);
-      setCursoValue(cursoEncontrado.nombreCurso);
-    } else {
-      setMatriculaCurso("");
-    }
-    console.log(cursoValue);
+    const cursoEncontrado = cursoFull.find((item) => item.nombreCurso === selectedCurso);
+    setCursoValue(cursoEncontrado ? cursoEncontrado.nombreCurso : "");
+    setMatriculaCurso(cursoEncontrado ? cursoEncontrado.matriculaCurso : "");
+    console.log("Nuevo valor de cursoValue:", cursoValue);
   };
   
-  
+
+
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -204,7 +179,7 @@ console.log(cursoEncontrado);
               })}
             >
               <option value="curso">Curso</option>
-              {curso?.map((item) => {
+              {cursoFull?.map((item) => {
                 return (
                   <option key={item._id}>
                     {item.nombreCurso.toUpperCase()}
