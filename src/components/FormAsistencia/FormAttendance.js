@@ -15,12 +15,14 @@ const FormAttendance = () => {
   const [idDocente, setIdDocente] = useState("");
   const [cursoValue, setCursoValue] = useState("");
   const [isLoadingCurso, setIsLoadingCurso] = useState(false);
-
+/*   const [value, setValue] = useState("");
+ */
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
+    setValue, // Aquí obtenemos setValue desde useForm
   } = useForm({
     defaultValues: {
       docenteAula: "",
@@ -32,6 +34,7 @@ const FormAttendance = () => {
     },
   });
 
+  console.log(cursoValue)
   const onSubmit = async (data) => {
     const updatedData = { ...data, cursoNivel: cursoValue }; // Asegura que el valor actualizado se envíe
   
@@ -46,6 +49,7 @@ const FormAttendance = () => {
         icon: "success",
       });
       reset(); // Reseteamos después de que la API responde
+      setCursoFull([])
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -128,13 +132,19 @@ const FormAttendance = () => {
   const handleCursoOnChange = (e) => {
     const selectedCurso = e.target.value;
     const cursoEncontrado = cursoFull.find((item) => item.nombreCurso === selectedCurso);
-    setCursoValue(cursoEncontrado ? cursoEncontrado.nombreCurso : "");
-    setMatriculaCurso(cursoEncontrado ? cursoEncontrado.matriculaCurso : "");
-    console.log("Nuevo valor de cursoValue:", cursoValue);
+  
+    if (cursoEncontrado) {
+      setCursoValue(cursoEncontrado.nombreCurso);
+      setMatriculaCurso(cursoEncontrado.matriculaCurso);
+      setValue("cursoNivel", cursoEncontrado.nombreCurso, { shouldValidate: true, shouldDirty: true });
+    } else {
+      setCursoValue("");
+      setMatriculaCurso("");
+      setValue("cursoNivel", ""); // Resetea el valor en caso de que no haya selección válida
+    }
   };
   
-
-
+  
   return (
     <div className="container-form">
       <h2>Formulario de Asistencia</h2>
@@ -177,6 +187,7 @@ const FormAttendance = () => {
               {...register("cursoNivel", {
                 required: "Seleccione un curso",
               })}
+              value={cursoValue}
             >
               <option value="curso">Curso</option>
               {cursoFull?.map((item) => {
