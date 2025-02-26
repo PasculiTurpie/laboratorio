@@ -26,7 +26,7 @@ const FormAttendance = () => {
   } = useForm({
     defaultValues: {
       docenteAula: "",
-      cursoNivel: "",
+      cursoNivel: cursoValue,
       matricula: "",
       asistencia: "",
       herramienta: "",
@@ -127,16 +127,19 @@ const FormAttendance = () => {
 
   useEffect(() => {
     console.log("Nuevo valor de cursoValue:", cursoValue);
-  }, [cursoValue]);
+  }, []);
 
   const handleCursoOnChange = (e) => {
     const selectedCurso = e.target.value;
+    setCursoValue(selectedCurso);
+    console.log('valor de cursoValue:', cursoValue);
     const cursoEncontrado = cursoFull.find((item) => item.nombreCurso === selectedCurso);
   
     if (cursoEncontrado) {
-      setCursoValue(cursoEncontrado.nombreCurso);
       setMatriculaCurso(cursoEncontrado.matriculaCurso);
       setValue("cursoNivel", cursoEncontrado.nombreCurso, { shouldValidate: true, shouldDirty: true });
+      console.log('valor de cursoValue:', cursoValue);
+
     } else {
       setCursoValue("");
       setMatriculaCurso("");
